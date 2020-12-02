@@ -1,0 +1,47 @@
+const router = require('express').Router();
+const userControllers = require('../../controllers/faculty/faculty.controller');
+const profileControllers = require('../../controllers/faculty/profile.controller');
+const courseControllers = require('../../controllers/faculty/course.controller');
+const auth = require('../../middleware/auth');
+
+//registers a new User
+router.post('/register',userControllers.register);
+
+//Handle Login
+router.post('/login', userControllers.login);
+
+//Checks for a valid token and returns a boolean
+router.post('/tokenIsValid', userControllers.tokenIsValid);
+
+//Gets currently logged in user
+router.get('/', auth, userControllers.getLoggedInUser);
+
+//==============================PROFILE==========================
+
+//Adds profile
+router.post('/profile/add', auth, profileControllers.addProfile);
+
+//Edits Profile
+router.patch('/profile/edit', auth, profileControllers.editProfile);
+
+//Get Profile
+router.get('/profile/get', auth, profileControllers.getProfile);
+
+//==============================COURSE==========================
+
+// Add a course
+router.post('/course/add',auth,courseControllers.addCourse)
+
+//Add a course video
+router.post('/course/add-video/:cid',auth,courseControllers.addVideo)
+
+//Get all Courses
+router.get('/course/all',auth,courseControllers.getAllCourse)
+
+//Get specific course
+router.get('/course/:cid',auth,courseControllers.getCourse)
+
+//Get all videos of specific course
+router.get('/course/:cid/videos',auth,courseControllers.getAllVideos)
+
+module.exports = router;

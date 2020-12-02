@@ -1,0 +1,13 @@
+const mongoose = require('mongoose');
+
+
+const profileSchema = new mongoose.Schema({
+  image:{type: String , default:null},
+  department : {type: String, required: true},
+  name: { type: String, required: true },
+  rollno:{ type: String, required: true }
+  
+
+});
+
+module.exports = mongoose.model('StudentProfile', profileSchema);
