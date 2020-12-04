@@ -62,8 +62,27 @@ const getAllVideos = async (req,res)=>{
   }
 }
 
+const addFile = async(req,res)=>{
+  try {
+   const data = req.body;
+   const course = await Course.findById(req.params.cid)
+
+   course.files.push(data);
+
+   const updatedCourse = await course.save()
+
+   res.status(200).json(updatedCourse)
+  //res.status(200).json(course)
+
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 exports.addCourse = addCourse;
 exports.addVideo = addVideo;
 exports.getAllCourse = getAllCourse;
 exports.getCourse = getCourse;
 exports.getAllVideos = getAllVideos;
+exports.addFile = addFile;

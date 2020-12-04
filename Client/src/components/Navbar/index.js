@@ -37,7 +37,7 @@ function Navbar() {
   return (
     <nav className="menuBar">
       <div className="logo">
-        <a href="#">logo</a>
+        <a href="#">E-LEARN</a>
       </div>
       <div className="menuCon">
         <div className="leftMenu">

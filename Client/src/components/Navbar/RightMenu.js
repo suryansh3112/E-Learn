@@ -26,7 +26,7 @@ function RightMenu(props) {
      
         {user && (
           <Menu.Item key="Profile">
-            <Link to='/f-profile'>Profile</Link>
+            <Link to='/profile'>Profile</Link>
           </Menu.Item>
         )}
         {user && (

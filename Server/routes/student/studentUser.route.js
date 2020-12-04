@@ -19,6 +19,12 @@ router.get('/', auth, userControllers.getLoggedInUser);
 
 
 //Adds profile
-router.post('/profile/add', auth, profileControllers.addProfile);
+router.post('/profile', auth, profileControllers.addProfile);
+
+//Edit Profile
+router.patch('/profile', auth, profileControllers.editProfile);
+
+//Gets profile
+router.get('/profile', auth, profileControllers.getProfile);
 
 module.exports = router;

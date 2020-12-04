@@ -2,28 +2,28 @@ import React, { useState ,useContext, useEffect} from 'react'
 import UserContext from '../../context/UserContext'
 import {Typography, Form, Input, Button,} from 'antd';
 import axios from 'axios';
-import VideoUpload from '../utils/VideoUpload';
+import PdfUpload from '../utils/PdfUpload';
 import {useParams} from 'react-router-dom'
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
-function AddVideo() {
+function AddFile() {
 
   const { userData, setUserData } = useContext(UserContext);
 
   const {cid} = useParams()
-  const [video,setVideo]=useState({
-    vname:"",
-    vno:"",
-    video:""
+  const [file,setFile]=useState({
+    fname:"",
+    fno:"",
+    fpath:""
 
   })
 
   const handleChange = (e)=>{
     const { name, value } = e.target;
 
-    setVideo((prev) => {
+    setFile((prev) => {
       return {
         ...prev,
         [name]: value
@@ -31,47 +31,48 @@ function AddVideo() {
     });
   }
 
-   const setVideoPath = (v)=>{
-    setVideo((prev) => {
+   const setFilePath = (f)=>{
+    setFile((prev) => {
       return {
         ...prev,
-        video:v
+        fpath:f
       };
     });
    } 
 
   const onSubmit = async (e)=>{
     e.preventDefault();
-   console.log(video);
+   console.log(file);
     try {
-      const res = await axios.post(`http://localhost:5000/faculty/course/add-video/${cid}`,video,{ headers: { 'x-auth-token': userData.token } })
-      alert('Video Added');
+      const res = await axios.post(`http://localhost:5000/faculty/course/add-file/${cid}`,file,{ headers: { 'x-auth-token': userData.token } })
+      alert('File Added');
     } catch (error) {
       console.log(error);
       alert("Please try again.")
+      console.log(error);
     }
 
   }
 
   return (
     <div>
-    <Title level={2}> Add Video</Title>
+    <Title level={2}> Add File</Title>
     <Form onSubmit={onSubmit} >
 
-      <VideoUpload video={video.video} addVideo={setVideoPath}/>
+      <PdfUpload fpath={file.fpath} addFile={setFilePath}/>
 
       <label>Topic:</label>
-      <Input name='vname' value={video.vname} onChange={handleChange}/>
+      <Input name='fname' value={file.fname} onChange={handleChange}/>
       <br/><br/>
 
-      <label>Lecture no:</label>
-      <Input name='vno' value={video.vno} onChange={handleChange}/>
+      <label>Note no:</label>
+      <Input name='fno' value={file.fno} onChange={handleChange}/>
       <br/><br/>
 
-      <Button type="primary"  onClick={onSubmit}>Add Video</Button>  
+      <Button type="primary"  onClick={onSubmit}>Add File</Button>  
     </Form>
     </div>
   )
 }
 
-export default AddVideo
+export default AddFile

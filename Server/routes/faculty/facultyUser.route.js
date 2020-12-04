@@ -19,13 +19,13 @@ router.get('/', auth, userControllers.getLoggedInUser);
 //==============================PROFILE==========================
 
 //Adds profile
-router.post('/profile/add', auth, profileControllers.addProfile);
+router.post('/profile', auth, profileControllers.addProfile);
 
 //Edits Profile
-router.patch('/profile/edit', auth, profileControllers.editProfile);
+router.patch('/profile', auth, profileControllers.editProfile);
 
 //Get Profile
-router.get('/profile/get', auth, profileControllers.getProfile);
+router.get('/profile', auth, profileControllers.getProfile);
 
 //==============================COURSE==========================
 
@@ -34,6 +34,9 @@ router.post('/course/add',auth,courseControllers.addCourse)
 
 //Add a course video
 router.post('/course/add-video/:cid',auth,courseControllers.addVideo)
+
+//Add a course file
+router.post('/course/add-file/:cid',auth,courseControllers.addFile)
 
 //Get all Courses
 router.get('/course/all',auth,courseControllers.getAllCourse)

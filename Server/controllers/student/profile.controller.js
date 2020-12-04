@@ -3,26 +3,17 @@ const User = require('../../models/student/StudentUser.model');
 
 const addProfile = async(req,res)=>{
   try {
-    const {department}=req.body;
+    
+    const data = req.body;
 
-    if(!department)
-      return res
-      .status(400)
-      .json({ message: 'Not all fields have been entered.' });
+    const updateUser = await User.findOne({_id:req.user})
 
-
-      const updateUser = await User.findOne({_id:req.user})
-
-      const name=updateUser.name;
-      const rollno=updateUser.username;
-
-    const createProfile = new StudentProfile({department,name,rollno})
+    const createProfile = new StudentProfile(data)
     const newProfile = await createProfile.save()
 
-    
     updateUser.profile = newProfile._id;
 
-    const savedUser = updateUser.save()
+    const savedUser =await updateUser.save()
     res.status(200).json(savedUser)
 
 
@@ -31,5 +22,35 @@ const addProfile = async(req,res)=>{
   }
 }
 
+const editProfile = async(req,res)=>{
+  try {
+    const user = await User.findOne({_id:req.user})
+    const edit = await StudentProfile.findByIdAndUpdate(user.profile, {$set : req.body })
+    res.status(200).json(edit)
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+const getProfile = async(req,res)=>{
+  try {
+    const user = await User.findOne({_id:req.user})
+    if(user.profile){
+
+      const profile = await StudentProfile.findOne(user.profile)
+
+      res.status(200).json(profile)
+    }
+    else{
+      res.status(200).json(false)
+    }
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 //========================EXPORTS===============================
 exports.addProfile = addProfile;
+exports.editProfile = editProfile;
+exports.getProfile = getProfile;

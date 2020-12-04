@@ -9,6 +9,11 @@ const courseSchema = new mongoose.Schema({
     vname:{type:String, required:true},
     video:{type:String, required:true},
     vno:{type:Number, required:true}
+  }],
+  files:[{
+    fname:{type:String, required:true},
+    fpath:{type:String, required:true},
+    fno:{type:Number, required:true}
   }]
 });
 

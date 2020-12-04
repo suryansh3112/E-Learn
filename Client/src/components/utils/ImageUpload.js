@@ -3,9 +3,9 @@ import Dropzone from 'react-dropzone';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
-function FileUpload(props) {
+function ImageUpload(props) {
 
-    const [image, setImage] = useState()
+    
    
 
     const onDrop = async (files) =>{
@@ -22,8 +22,9 @@ function FileUpload(props) {
         
             if(response.data.success){
                 const imagePath = response.data.image.replaceAll('\\','/')
-                setImage(imagePath);
-                props.addImage(imagePath)
+                props.setImage(prev=>{
+                    return{ ...prev,image:imagePath}
+                })
             }
         } catch (error) {
             alert('Failed to save the Image in Server')
@@ -60,7 +61,7 @@ function FileUpload(props) {
                         
                         <input {...getInputProps()} />
 
-                       { image ? <img src={`http://localhost:5000/${image}`} height='120px' width='120px' style={{borderRadius:'50%'}}/>:
+                       { props.image ? <img src={`http://localhost:5000/${props.image}`} height='120px' width='120px' style={{borderRadius:'50%'}}/>:
                         <Avatar size={120} icon={<UserOutlined />} />}
                         
                     </div>
@@ -74,4 +75,4 @@ function FileUpload(props) {
     )
 }
 
-export default FileUpload
+export default ImageUpload

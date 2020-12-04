@@ -5,32 +5,13 @@ const addProfile = async(req,res)=>{
 
   try{
 
-    const {regno, q1, q2, department, image}=req.body;
-
-    if(!image)
-      image='';
-
-    if(!regno || !department ||!q1 ||!q2)
-      return res
-      .status(400)
-      .json({ message: 'Not all fields have been entered.' });
-
-    
-
-      const updateUser = await User.findOne({_id:req.user})
-
-      const name = updateUser.name;
+    const data = req.body;
       
-    const createProfile = new FacultyProfile({
-      regno,
-      q1,
-      q2,
-      department,
-      name,
-      image
-    })
+    const createProfile = new FacultyProfile(data)
 
     const newProfile = await createProfile.save()
+
+    const updateUser = await User.findOne({_id:req.user})
     
     updateUser.profile = newProfile._id;
 

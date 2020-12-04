@@ -10,10 +10,11 @@ import './App.css';
 import Fprofile from './components/Faculty/Fprofile'
 import AddCourse from './components/Faculty/AddCourse'
 import AddVideo from './components/Faculty/AddVideo'
+import AddFile from './components/Faculty/AddFile'
 
 
 //Student
-
+import Sprofile from './components/Student/Sprofile'
 
 function App() {
   console.log('APP');
@@ -39,6 +40,7 @@ function App() {
               <Route path="/home" component={Home} />
               <Route path="/courses" component={Courses} />
               <Route path="/course/:cid" component={SpecificCourse} />
+              <Route path="/profile" component={Sprofile} />
               
       </Switch>
     )
@@ -48,10 +50,11 @@ function App() {
     return(
       <Switch>
               <Route path="/home" component={Home} />
-              <Route path="/f-profile" component={Fprofile} />
+              <Route path="/profile" component={Fprofile} />
               <Route path="/courses" component={Courses} />
               <Route path="/add-course" component={AddCourse} />
               <Route path="/add-video/:cid" component={AddVideo} />
+              <Route path="/add-file/:cid" component={AddFile} />
               <Route path="/course/:cid" component={SpecificCourse} />
       </Switch>
     )

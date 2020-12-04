@@ -1,5 +1,5 @@
 import React, { useState ,useContext, useEffect} from 'react'
-import ImageUpload from '../utils/FileUpload'
+import ImageUpload from '../utils/ImageUpload'
 import UserContext from '../../context/UserContext'
 import { Form, Input, Button, Checkbox ,Select} from 'antd';
 import axios from 'axios'
@@ -8,50 +8,43 @@ const { Option } = Select;
 
 function Fprofile() {
 
-  const [image,setImage] = useState("aaaa");
-
-  // const[profileData,setProfileData] = useState({
-  //   name:"",
-  //   regno:"",
-  //   department:"",
-  //   q1:"",
-  //   q2:"",
-  //   image:""
-  // })
-
   const { userData, setUserData } = useContext(UserContext);
 
+  const [profileExist,setProfileExist] = useState(false)
 
-  // useEffect(() => {
-  //   axios
-  //   .get('http://localhost:5000/faculty/profile/get', { headers: { 'x-auth-token': userData.token } })
-  //   .then(res=>{
-  //     if(res.data){
-  //       let name = res.data.name
-  //       let regno = res.data.regno
-  //       let department = res.data.department
-  //       let q1 = res.data.q1
-  //       let q2 = res.data.q2
-  //       let image = res.data.image
+  const[info,setInfo] = useState({
+    name:userData.user.name,
+    regno:"",
+    department:"",
+    q1:"",
+    q2:"",
+    image:""
+  })
 
-        
-  //       setProfileData({
-  //         name,
-  //         regno,
-  //         department,
-  //         q1,
-  //         q2,
-  //         image
-  //       });
-  //       console.log('p==',profileData);
+  useEffect(()=>{
+    axios
+    .get('http://localhost:5000/faculty/profile',{ headers: { 'x-auth-token': userData.token } })
+    .then(res=>{
+      if(res.data){
+        setProfileExist(true)
+        setInfo(res.data)
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  },[])
 
-  //   }
-  //   })
-      
-  // }, [])
-  
-  const addImage = (imagePath)=> setImage(imagePath);
+  const handleChange = (e)=>{
+    const { name, value } = e.target;
 
+    setInfo((prev) => {
+      return {
+        ...prev,
+        [name]: value
+      };
+    });
+  }
 
 
   const departments = [
@@ -68,111 +61,86 @@ function Fprofile() {
     { key: 4, value: "M.Tech" }   
   ]
 
-  const formItemLayout = {
-     labelCol: { span: 2,offset:0},
-    wrapperCol: { span: 14 ,offset:0},
-  };
-
-  const onFinish = async(values)=>{
-    
-    const data = {...values,image}
-    console.log(data);
+  const onSubmit = async (e)=>{
+    e.preventDefault();
+      
     try {
-      const res = await axios.post('http://localhost:5000/faculty/profile/add',data,{ headers: { 'x-auth-token': userData.token } });
-      alert('Profile Saved.')
+      let res;
+      if (profileExist){
+        res = await axios.patch('http://localhost:5000/faculty/profile',info,{ headers: { 'x-auth-token': userData.token } })
+      }else{
+        res = await axios.post('http://localhost:5000/faculty/profile',info,{ headers: { 'x-auth-token': userData.token } })
+      }
+        alert('Profile Saved');
     } catch (error) {
-      alert('Please try again!!')
-      console.log(error.response.data.message);
+      console.log(error);
+      alert("Please try again.")
     }
-    
-    
+
   }
 
   
   
   return (
     <div>
+      <Form>
       
-      <Form 
-        onFinish={onFinish}
-        {...formItemLayout}
-      >
-      <div >
-        <ImageUpload addImage={addImage}/>
-      </div>
-     
+        <ImageUpload image={info.image} setImage={setInfo}/>
 
-      <Form.Item
-        name='name'
-        label='Name'
-        initialValue={userData.user.name}
-        
-        
-      >
-        <Input />
-        
-      </Form.Item>
+        <label>Name : </label>
+        <Input name='name' value={info.name} />
 
-      <Form.Item
-        name='regno'
-        label='Reg. Number'
-      >
-       
-        <Input type='number'/>
-      </Form.Item>
-        
-      <Form.Item
-        name='department'
-        label='Department'
-        
-      >
-        <Select style={{ width: 150 }} placeholder='Branch' >
-          {departments.map(item=>
-            <Option key={item.key} value={item.value}>{item.value}</Option>
-          )}
-        </Select>
-      </Form.Item>  
-         
-      <Form.Item  label='Qualification'>
-      <Input.Group compact>
-        <Form.Item name='q1'>
-          <Select style={{ width: 100 }} placeholder='Degree'>
-            {qualifications.map(item=>
+        <label>Reg no. </label>
+        <Input type='number' name='regno' value={info.regno} onChange={handleChange}/>
+
+        <label>Department : </label>
+        <Select name='department' value={info.department} onChange ={v=>{
+          setInfo(prev=>{
+            return{...prev,department:v}
+          })
+        }} 
+        style={{ width: 150 }} placeholder='Branch' >
+            {departments.map(item=>
               <Option key={item.key} value={item.value}>{item.value}</Option>
             )}
-          </Select>
-        </Form.Item>
-        <Form.Item name='q2'>
-          <Select  style={{ width: 150 }} placeholder='Branch'>
-              {departments.map(item=> 
+        </Select>
+
+              <br/><br/>
+
+        <label>Qualification : </label>
+        <Input.Group compact>
+          <Select name='q1' value={info.q1} onChange ={v=>{
+            setInfo(prev=>{
+              return{...prev,q1:v}
+            })
+          }} 
+          style={{ width: 120 }} placeholder='Branch' >
+              {qualifications.map(item=>
                 <Option key={item.key} value={item.value}>{item.value}</Option>
               )}
-            </Select> 
-        </Form.Item>
-      </Input.Group>
-        
-      </Form.Item>
+          </Select>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit">Save</Button>    
-      </Form.Item>
-       
-        
-        
+          <Select name='q2' value={info.q2} onChange ={v=>{
+            setInfo(prev=>{
+              return{...prev,q2:v}
+            })
+          }} 
+          style={{ width: 150 }} placeholder='Branch' >
+              {departments.map(item=>
+                <Option key={item.key} value={item.value}>{item.value}</Option>
+              )}
+          </Select>
+        </Input.Group>
 
+        <br/><br/>
+     
+        <Button type="primary"  onClick={onSubmit}>Save</Button> 
+   
       </Form>
-
     </div>
     
   )
-  // return(
-  //   <>
-  //     <h1>Name = {profileData.name}</h1>
-  //     <h1>Image = {profileData.image}</h1>
-  //     <input value={profileData.q1}/>
-  //     <input value={profileData.q2}/>
-  //   </>
-  // )
+  
 }
 
 export default Fprofile
