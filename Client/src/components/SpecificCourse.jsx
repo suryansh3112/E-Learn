@@ -1,11 +1,19 @@
 import React, { useState,useEffect ,useContext} from 'react'
 import UserContext from '../context/UserContext'
 import ReactPlayer from 'react-player'
-import {  PlusOutlined,UserOutlined} from '@ant-design/icons';
+import {  PlusOutlined,UserOutlined,CaretRightOutlined } from '@ant-design/icons';
 import {Link,useParams} from 'react-router-dom'
 import axios from 'axios'
-import {Typography, Avatar} from 'antd'
+import {Typography, Avatar,  Collapse, Tabs, Button} from 'antd'
+import './specificCourse.css'
+
+
+const { Panel } = Collapse;
+
 const { Title } = Typography;
+
+const { TabPane } = Tabs;
+
 
 function SpecificCourse() {
 
@@ -19,36 +27,94 @@ function SpecificCourse() {
     .then(res=>setCourse(res.data))
   },[])
  
+  console.log(course);
+  function DisplayVideos({header, video, idx, ...props}){
 
-  function DisplayVideos(props){
+    console.log(props);
     return(
-      <div>
-        <h3>Lecture {props.vno} : {props.vname}</h3>
-        <video width="320" height="240" controls muted>
-          <source src={`http://localhost:5000/${props.video}`}  />
-        </video>
-        {/* <ReactPlayer url={`http://localhost:5000/${props.video}`} controls/> */}
+      
+        <Collapse.Panel header={header} key={idx} className="site-collapse-custom-panel" {...props}>
+          <video width="320" height="240" controls muted>
+            <source src={`http://localhost:5000/${video}`}  />
+          </video>
+        </Collapse.Panel>
+    )
+  }
+
+  function DisplayFiles({header, fpath, idx, ...props}){
+    return(
+      
+         
+        <Collapse.Panel header={header}  className="site-collapse-custom-panel" {...props}>
+          <embed src={`http://localhost:5000/${fpath}`} height="300px" width="60%"></embed>
+       
+        </Collapse.Panel> 
+    )
+  }
+
+  function Scores({name,rollno,score}){
+    return(
+      <tr>
+        <td>{rollno}</td>
+        <td>{name}</td>
+        <td>{score}</td>
+      </tr>
+    )
+  }
+
+  function DisplayQuiz({results,date,header,qna,qid,...props}){
+    
+    return(
+      <Collapse.Panel header={header}  className="site-collapse-custom-panel" {...props}>
+        <hr/>
+        <div>
+          <p><strong>Due :</strong> {date.substring(0,10)}  <strong>Points :</strong> {qna.length} <strong>Questions:</strong> {qna.length} </p>
+          <p><strong>Time Limit : </strong> 60 minutes</p>
+          <p><strong>Allowed Attempts : </strong> Unlimited</p>
         
-      </div>
+        </div>
+        <hr/>
+          <h3>Instructions </h3>
+          <p>Quick Quiz</p>
+
+          {userData.student ? <Button type='primary' >
+            <Link to={`/attempt-quiz/${qid}`}>
+              Attempt Quiz
+            </Link>
+          </Button> : <Button disabled type='primary' >
+            <Link to={`/attempt-quiz/${qid}`}>
+              Attempt Quiz
+            </Link>
+          </Button>}
+
+          {results && !userData.student &&
+            <div>
+            <h3>Scores</h3>
+            <table>
+              <tr>
+                <th>Rollno</th>
+                <th>Name</th>
+                <th>Score</th>
+              </tr>
+              {results.map((item,idx)=>{
+                return <Scores key={idx} name={item.name} rollno={item.rollno} score={item.score} />
+              })}
+            </table>
+            </div>
+          }
+
+          
+          
+
+          
+       
+        </Collapse.Panel> 
     )
   }
 
-  function DisplayFiles(props){
-    return(
-      <div>
-        <h3>Note {props.fno} : {props.fname}</h3>
-        {/* <video width="320" height="240" controls>
-          <source src={`http://localhost:5000/${props.video}`}  />
-        </video>
-        <ReactPlayer url={`http://localhost:5000/${props.video}`} controls/> */}
-        <embed src={`http://localhost:5000/${props.fpath}`} height="300px" width="60%"></embed>
-
-      </div>
-    )
-  }
 
   return (
-    <div>
+    <div style={{textAlign:'center'}}>
         
        {
         !userData.student && <Link to={`/add-video/${cid}`}>
@@ -68,25 +134,78 @@ function SpecificCourse() {
       </Link>
       }
 
+      {
+        !userData.student && <Link to={`/add-quiz/${cid}`}>
+        <div style={{position:'fixed' ,top:'23rem',right:'4rem'}}>
+          <Avatar size={80} icon={ <PlusOutlined />} style={{borderRadius:'50%'}} />
+          <Title level={5}>Add Quiz</Title>
+        </div>
+      </Link>
+      }
+
       {course && <h1>{course.cname}</h1>}
 
-      {
+      <div style={{width:'80%' ,margin:'1rem auto'}}>
+
+      <Tabs defaultActiveKey="1" centered >
+        <TabPane tab="Videos" key="1">
+        {
           <div>    
-           {course.videos && course.videos.map(item=>{
-             return <DisplayVideos key={item._id} vname={item.vname} vno={item.vno} video={item.video}/>
+            <Collapse
+              bordered={false}
+              defaultActiveKey={['1']}
+              expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+              className="site-collapse-custom-collapse"
+            >
+           {course.videos && course.videos.map((item,idx)=>{
+             const header = 'Lecture '+item.vno+' : '+item.vname;
+             return <DisplayVideos key={item._id} idx={idx+1} header={header} video={item.video}/>
            })}
+
+           </Collapse>
           </div>  
       }
-
-      {
-        <div>    
-           {course.files && course.files.map(item=>{
-             return <DisplayFiles key={item._id} fname={item.fname} fno={item.fno} fpath={item.fpath}/>
-           })}
+        </TabPane>
+        <TabPane tab="Notes" key="2">
+        {
+          <div>    
+            <Collapse
+              bordered={false}
+              defaultActiveKey={['1']}
+              expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+              className="site-collapse-custom-collapse"
+            >
+              {course.files && course.files.map((item,idx)=>{
+                const header = 'Note '+item.fno+' : '+item.fname;
+                return <DisplayFiles key={item._id} idx={idx+1} header={header} fpath={item.fpath}/>
+              })}
+            </Collapse>
           </div> 
-      }
+        }
+        </TabPane>
+        <TabPane tab="Quiz" key="3">
+          <Collapse
+            bordered={false}
+            defaultActiveKey={['1']}
+            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+            className="site-collapse-custom-collapse"
+          >
+            {course.quizs && course.quizs.map((item,idx)=>{
+                const header = 'Quiz #'+item.qno+' : '+item.qname;
+                return <DisplayQuiz key={item._id} results={item.results} idx={idx+1} qid={item._id} date={item.qdate} header={header} qna={item.qna} />
+              })}
+
+          </Collapse>
+        </TabPane>
+      </Tabs>
+
+      </div>
+
       
 
+
+
+      
 
     </div>
   )

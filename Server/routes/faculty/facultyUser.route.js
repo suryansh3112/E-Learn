@@ -38,6 +38,15 @@ router.post('/course/add-video/:cid',auth,courseControllers.addVideo)
 //Add a course file
 router.post('/course/add-file/:cid',auth,courseControllers.addFile)
 
+//Add quiz
+router.post('/course/add-quiz/:cid',auth,courseControllers.addQuiz)
+
+//Get quiz
+router.get('/course/get-quiz/:qid',auth,courseControllers.getQuiz)
+
+//Submit quiz
+router.post('/course/submit-quiz/:qid',auth,courseControllers.submitQuiz)
+
 //Get all Courses
 router.get('/course/all',auth,courseControllers.getAllCourse)
 

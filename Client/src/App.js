@@ -11,10 +11,13 @@ import Fprofile from './components/Faculty/Fprofile'
 import AddCourse from './components/Faculty/AddCourse'
 import AddVideo from './components/Faculty/AddVideo'
 import AddFile from './components/Faculty/AddFile'
+import AddQuiz from './components/Faculty/AddQuiz'
 
 
 //Student
 import Sprofile from './components/Student/Sprofile'
+import AttemptQuiz from './components/Student/AttemptQuiz'
+import ChatBot from './Chatbot/ChatbotMain'
 
 function App() {
   console.log('APP');
@@ -36,27 +39,38 @@ function App() {
 
   const Student = ()=>{
     return(
-      <Switch>
+      <div>
+      <ChatBot/>
+        <Switch>
+              
               <Route path="/home" component={Home} />
               <Route path="/courses" component={Courses} />
               <Route path="/course/:cid" component={SpecificCourse} />
               <Route path="/profile" component={Sprofile} />
+              <Route path="/attempt-quiz/:qid" component={AttemptQuiz} />
               
       </Switch>
+      </div>
+      
     )
   }
 
   const Faculty = ()=>{
     return(
-      <Switch>
+      <div>
+        <ChatBot/>
+        <Switch>
               <Route path="/home" component={Home} />
               <Route path="/profile" component={Fprofile} />
               <Route path="/courses" component={Courses} />
               <Route path="/add-course" component={AddCourse} />
               <Route path="/add-video/:cid" component={AddVideo} />
+              <Route path="/add-quiz/:cid" component={AddQuiz} />
               <Route path="/add-file/:cid" component={AddFile} />
               <Route path="/course/:cid" component={SpecificCourse} />
       </Switch>
+      </div>
+      
     )
   }
 
@@ -111,6 +125,7 @@ function App() {
       <Router>
         <UserContext.Provider value={{ userData, setUserData }}>
           <Navbar />
+          
           <div className="container">
             <InnerFunction/>
           </div>

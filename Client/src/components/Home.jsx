@@ -6,75 +6,25 @@ import {Button } from 'antd';
 function Home() {
  
   const { userData, setUserData } = useContext(UserContext);
-  console.log('Home',userData);
+  
   let salutation = 'Welcome to Home Page';
   if (userData.user) {
-    salutation = `Welcome ${userData.user.name} you are a ${userData.student}`;
+    salutation = `Welcome ${userData.user.name}, this is the Homepage `;
 
   }
 
-  // useEffect(()=>{
-  //   async function getProfile(){
-  //     const res = await axios.get('http://localhost:5000/faculty/profile/get',
-  //                         { headers: { 'x-auth-token': userData.token } });
-      
-      // if(res.data){
-      //   let name = res.data.name
-      //   let regno = res.data.regno
-      //   let department = res.data.department
-      //   let q1 = res.data.q1
-      //   let q2 = res.data.q2
-      //   let image = res.data.image
-
-        
-      //   setProfileData({
-      //     name,
-      //     regno,
-      //     department,
-      //     q1,
-      //     q2,
-      //     image
-      //   });
-  //       console.log(name,q1,q2);
-  //     }
-      
-  //     console.log('HOME=' ,profileData);
-  //   }
-     
-      
-    
-
-  //   getProfile();
-
-  // },[])
-
-
-  const[profileData,setProfileData] = useState({
-    name:"",
-    regno:"",
-    department:"",
-    q1:"",
-    q2:"",
-    image:""
-  })
+  
 
 
   return (
-    <div>
-      <h1>{salutation}</h1>
-      <Button type='primary ' danger>Click me</Button>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
-      <h1>lskjdfkljslfjl</h1>
+    <div style={{maxWidth:'500px', margin:'0 auto' ,padding:'2rem ',boxShadow:'6px 6px 15px 5px rgba(0, 0, 0,0.25)',borderRadius:"15px"}}>
+      <h2>{salutation}</h2>
+      <h2>This is an E Learning Platform</h2>
+      <h1><em>Developed By:</em></h1>
+      <h1>8610 : Sahil Jain</h1>
+      <h1>8630 : Suryansh Purohit</h1>
+      <h1>8641 : Rahul Shinde</h1>
+      
     </div>
   );
 }

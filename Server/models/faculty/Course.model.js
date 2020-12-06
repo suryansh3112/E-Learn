@@ -14,7 +14,8 @@ const courseSchema = new mongoose.Schema({
     fname:{type:String, required:true},
     fpath:{type:String, required:true},
     fno:{type:Number, required:true}
-  }]
+  }],
+  quizs:[{type:mongoose.Schema.Types.ObjectId , ref:'Quiz'}]
 });
 
 module.exports = mongoose.model('Course', courseSchema);

@@ -82,16 +82,25 @@ function Fprofile() {
   
   
   return (
-    <div>
+    <div style={{maxWidth:'500px', margin:'0 auto' ,padding:'1rem 2rem',boxShadow:'6px 6px 15px 5px rgba(0, 0, 0,0.25)',borderRadius:"15px"}}>
+      
+      <div style={{textAlign:'center'}} >
+      <h1 style={{marginBottom:'0'}} >Profile</h1>
+      </div>
       <Form>
       
+      <div style={{margin:'0 0 1rem 10rem'}} >
         <ImageUpload image={info.image} setImage={setInfo}/>
+        </div>
+        
 
         <label>Name : </label>
-        <Input name='name' value={info.name} />
+        <Input name='name' value={info.name} style={{width:'80%'}}/>
+        <br/><br/>
 
         <label>Reg no. </label>
-        <Input type='number' name='regno' value={info.regno} onChange={handleChange}/>
+        <Input type='number' name='regno' value={info.regno} onChange={handleChange} style={{width:'100px'}}/>
+        <br/><br/>
 
         <label>Department : </label>
         <Select name='department' value={info.department} onChange ={v=>{
@@ -134,7 +143,7 @@ function Fprofile() {
 
         <br/><br/>
      
-        <Button type="primary"  onClick={onSubmit}>Save</Button> 
+        <Button type="primary" style = {{width:'100%'}} onClick={onSubmit}>Save</Button> 
    
       </Form>
     </div>
